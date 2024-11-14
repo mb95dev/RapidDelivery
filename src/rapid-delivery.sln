@@ -9,7 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{DFF8E2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notifications", "Notifications", "{4EB18C02-DAF1-4B40-A7F8-5AA85A27F7A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifications.API", "Services\Notifications\Notifications.API\Notifications.API.csproj", "{678CD29E-F967-4CDB-8B9D-CADECC337396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notifications.API", "Services\Notifications\Notifications.API\Notifications.API.csproj", "{678CD29E-F967-4CDB-8B9D-CADECC337396}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.API", "Services\Orders\Orders.API\Orders.API.csproj", "{F33974C6-3757-42EF-AA06-E89B6539B256}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{678CD29E-F967-4CDB-8B9D-CADECC337396}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{678CD29E-F967-4CDB-8B9D-CADECC337396}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{678CD29E-F967-4CDB-8B9D-CADECC337396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33974C6-3757-42EF-AA06-E89B6539B256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33974C6-3757-42EF-AA06-E89B6539B256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33974C6-3757-42EF-AA06-E89B6539B256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33974C6-3757-42EF-AA06-E89B6539B256}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -29,6 +35,7 @@ Global
 		{DFF8E26E-4ECB-490F-B1F6-F3C2EA587046} = {8FB5D605-F874-4809-9907-5459C3DFD49E}
 		{4EB18C02-DAF1-4B40-A7F8-5AA85A27F7A3} = {8FB5D605-F874-4809-9907-5459C3DFD49E}
 		{678CD29E-F967-4CDB-8B9D-CADECC337396} = {4EB18C02-DAF1-4B40-A7F8-5AA85A27F7A3}
+		{F33974C6-3757-42EF-AA06-E89B6539B256} = {DFF8E26E-4ECB-490F-B1F6-F3C2EA587046}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {552A974C-77C7-4EA0-A1AC-9917541F703E}

@@ -14,6 +14,7 @@ RUN dotnet restore "./Services/Notifications/Notifications.API/Notifications.API
 COPY . .
 WORKDIR "/src/Services/Notifications/Notifications.API"
 RUN dotnet build "./Notifications.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Notifications.API.csproj" -c $BUILD_CONFIGURATION -o /app/build.nh
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release

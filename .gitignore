@@ -399,3 +399,6 @@ FodyWeavers.xsd
 /src/Services/Notifications/Notifications.API/Properties/launchSettings.json
 /src/Services/Notifications/Notifications.API/appsettings.Development.json
 /src/Services/Notifications/Notifications.API/appsettings.json
+/src/Services/Orders/Orders.API/Properties/launchSettings.json
+/src/Services/Orders/Orders.API/appsettings.Development.json
+/src/Services/Orders/Orders.API/appsettings.json

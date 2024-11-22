@@ -1,0 +1,38 @@
+services:
+  orders.api:
+    image: ${DOCKER_REGISTRY-}ordersapi
+    build:
+      context: .
+      dockerfile: Services/Orders/Orders.API/Dockerfile
+    environment: 
+      - MessageBroker__Host=amqp://rd-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+    depends_on:
+      - rdbroker
+    ports:
+      - "6003:8080"
+      - "6063:8081"
+ 
+  notifications.api:
+    image: ${DOCKER_REGISTRY-}notificationsapi
+    build:
+      context: .
+      dockerfile: Services/Notifications/Notifications.API/Dockerfile
+    environment: 
+      - MessageBroker__Host=amqp://rd-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+    depends_on:
+      - rdbroker
+
+  messagebroker:
+    container_name: rdbroker
+    hostname: rd-mq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"

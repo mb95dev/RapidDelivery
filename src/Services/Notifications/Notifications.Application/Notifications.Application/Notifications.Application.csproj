@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Commands\**\*.cs" />
+    <Compile Include="DTO\**\*.cs" />
+    <Compile Include="Events\**\*.cs" />
+    <Compile Include="Exceptions\**\*.cs" />
+    <Compile Include="Queries\**\*.cs" />
+    <Compile Include="Services\**\*.cs" />
+  </ItemGroup>
+
+</Project>

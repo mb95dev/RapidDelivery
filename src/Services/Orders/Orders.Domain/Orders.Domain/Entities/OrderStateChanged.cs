@@ -6,4 +6,3 @@ public class OrderStateChanged(Order order) : IDomainEvent
 {
 
 }
-

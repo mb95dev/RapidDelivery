@@ -1,12 +1,13 @@
 using Carter;
-using Orders.Infrastructure;
+using Orders.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
     .AddCarter()
-    .AddInfrastructure(builder.Configuration);
+    .AddApplicationServices(builder.Configuration);
+    
 
 
 var app = builder.Build();

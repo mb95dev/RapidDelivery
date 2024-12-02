@@ -1,5 +1,10 @@
-﻿namespace Orders.Core.Events;
+﻿using MediatR;
 
-public interface IDomainEvent
+namespace Orders.Core.Events;
+
+public interface IDomainEvent : INotification
 {
+    Guid EventId => Guid.NewGuid();
+    public DateTime OccurredOn => DateTime.Now;
+    public string EventType => GetType().AssemblyQualifiedName;
 }

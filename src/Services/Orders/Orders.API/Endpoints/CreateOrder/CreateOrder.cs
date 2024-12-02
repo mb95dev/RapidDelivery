@@ -1,4 +1,5 @@
 ﻿using Carter;
+using Mapster;
 using MediatR;
 
 namespace Orders.API.Endpoints.CreateOrder;
@@ -15,12 +16,12 @@ public class CreateOrder : ICarterModule
     {
         app.MapPost("/orders", async (CreateOrderRequest request, ISender sender) =>
         {
-            //var command = request.Adapt<CreateOrderCommand>();
-            //var result = await sender.Send(command);
+            var command = request.Adapt<CreateOrder>();
+            var result = await sender.Send(command);
 
-            //var response = result.Adapt<CreateOrderResponse>();
+            var response = result.Adapt<CreateOrderResponse>();
 
-            //return Results.Created($"/orders/{response.Id}", response);
+            return Results.Created($"/orders/{response.Id}", response);
         })
         .WithName("CreateOrder")
         .Produces<CreateOrderResponse>(StatusCodes.Status201Created)

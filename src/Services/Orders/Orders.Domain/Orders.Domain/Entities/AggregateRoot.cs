@@ -7,7 +7,7 @@ public abstract class AggregateRoot
     private readonly List<IDomainEvent> _events = new();
     public IEnumerable<IDomainEvent> Events => _events;
 
-    public AggregateId Id
+    public Guid Id
     {
         get;
         protected set;

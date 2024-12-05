@@ -1,12 +1,27 @@
-﻿namespace Orders.Core.Entities;
+﻿using Orders.Core.ValueObjects;
 
-public class Customer
+namespace Orders.Core.Entities;
+
+public class Customer : Entity<CustomerId>
 {
-    public Guid Id { get; private set; }
+    public string Name { get; private set; } = default!;
+    public string Email { get; private set; } = default!;
 
-    public Customer(Guid id)
+    private Customer() {}
+
+    public static Customer Create(CustomerId id, string name, string email)
     {
-        Id = id;
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(email);
+
+        var customer = new Customer
+        {
+            Id = id.Value,
+            Name = name,
+            Email = email
+        };
+
+        return customer;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using Common.Messaging.Events;
 using MassTransit;
 using MediatR;
+using Orders.Application.Commands;
 using Orders.Application.DTO;
 using Orders.Core.Entities;
 
@@ -16,7 +17,7 @@ public class BasketCheckoutEvenHandler(ISender sender) : IConsumer<BasketCheckou
         await sender.Send(command);
     }
 
-    private CreateOrder MapToCreateOrderCommand(BasketCheckoutEvent message)
+    private CreateOrderCommand MapToCreateOrderCommand(BasketCheckoutEvent message)
     {
         var addressDto = new AddressDto(message.FirstName, message.LastName, message.EmailAddress, message.AddressLine, message.Country, message.State, message.ZipCode);
         var paymentDto = new PaymentDto(message.CardName, message.CardNumber, message.Expiration, message.CVV, message.PaymentMethod);
@@ -39,7 +40,7 @@ public class BasketCheckoutEvenHandler(ISender sender) : IConsumer<BasketCheckou
             });
         
 
-        return new CreateOrder(orderDto);
+        return new CreateOrderCommand(orderDto);
     }
 }
 

@@ -2,7 +2,7 @@
 
 namespace Orders.Core.Entities;
 
-public class Product : AggregateRoot
+public class Product : Entity<ProductId>
 {
     public string Name { get; private set; } = default!;
     public decimal Price { get; private set; } = default!;
@@ -14,7 +14,7 @@ public class Product : AggregateRoot
 
         var product = new Product
         {
-            Id = id.Value,
+            Id = id,
             Name = name,
             Price = price
         };

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common.CQRS;
+﻿using Common..CQRS;
 using Orders.Application.DTO;
 using Orders.Core.Entities;
 using Orders.Core.ValueObjects;
@@ -11,9 +6,9 @@ using Orders.Core.ValueObjects;
 namespace Orders.Application.Commands
 {
     public class CreateOrderHandler
-        : ICommandHandler<CreateOrder, CreateOrderResult>
+        : ICommandHandler<CreateOrderCommand, CreateOrderResult>
     {
-        public async Task<CreateOrderResult> Handle(CreateOrder command, CancellationToken cancellationToken)
+        public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
         {
             //create Order entity from command object
             //save to database
@@ -29,62 +24,22 @@ namespace Orders.Application.Commands
 
         private Order CreateNewOrder(OrderDto orderDto)
         {
-            var orderItems = new List<OrderItemDto>
-            {
-                new OrderItemDto(Guid.NewGuid(), Guid.NewGuid(), 2, 49.99m),
-                new OrderItemDto(Guid.NewGuid(), Guid.NewGuid(), 1, 299.99m)
-            };
-
-            // Create shipping and billing addresses
-            var shippingAddress = new AddressDto(
-                "John",
-                "Doe",
-                "john.doe@example.com",
-                "123 Main Street",
-                "USA",
-                "California",
-                "90001"
-            );
-
-            var billingAddress = new AddressDto(
-                "John",
-                "Doe",
-                "john.doe@example.com",
-                "123 Main Street",
-                "USA",
-                "California",
-                "90001"
-            );
-
-            // Create payment details
-            var payment = new PaymentDto(
-                "John Doe",
-                "4111111111111111",
-                "12/25",
-                "123",
-                1 // 1 for Credit Card
-            );
-
-            // Create the order DTO
-            var order = new OrderDto(
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                "Sample Order",
-                shippingAddress,
-                billingAddress,
-                payment,
-                OrderStatus.New,
-                orderItems
-            );
+            var shippingAddress = Address.Of(orderDto.ShippingAddress.FirstName, orderDto.ShippingAddress.LastName, orderDto.ShippingAddress.EmailAddress, orderDto.ShippingAddress.AddressLine, orderDto.ShippingAddress.Country, orderDto.ShippingAddress.State, orderDto.ShippingAddress.ZipCode);
+            var billingAddress = Address.Of(orderDto.BillingAddress.FirstName, orderDto.BillingAddress.LastName, orderDto.BillingAddress.EmailAddress, orderDto.BillingAddress.AddressLine, orderDto.BillingAddress.Country, orderDto.BillingAddress.State, orderDto.BillingAddress.ZipCode);
 
             var newOrder = Order.Create(
-                id: new AggregateId(Guid.NewGuid()),
-                customerId: orderDto.CustomerId,
-                status: order.Status,
-                orderName: order.OrderName,
-                createdAt: DateTime.UtcNow
+                id: OrderId.Of(Guid.NewGuid()),
+                customerId: CustomerId.Of(orderDto.CustomerId),
+                orderName: OrderName.Of(orderDto.OrderName),
+                shippingAddress: shippingAddress,
+                billingAddress: billingAddress,
+                payment: Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod)
             );
 
+            foreach (var orderItemDto in orderDto.OrderItems)
+            {
+                newOrder.Add(ProductId.Of(orderItemDto.ProductId), orderItemDto.Quantity, orderItemDto.Price);
+            }
             return newOrder;
         }
     }

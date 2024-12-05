@@ -1,6 +1,8 @@
-﻿using Common.Messaging.MassTransit;
+﻿using System.Reflection;
+using Common.Messaging.MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.FeatureManagement;
 
 namespace Orders.Application;
 
@@ -10,7 +12,15 @@ namespace Orders.Application;
             (this IServiceCollection services, IConfiguration configuration)
         {
 
-            return services.AddMessageBroker(configuration);
+            services.AddMediatR(config =>
+            {
+                config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            });
+
+            services.AddFeatureManagement();
+            services.AddMessageBroker(configuration);
+
+            return services;
         }
     }
 

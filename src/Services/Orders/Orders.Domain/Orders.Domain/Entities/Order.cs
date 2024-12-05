@@ -1,37 +1,78 @@
 ﻿using Orders.Core.Events;
+using Orders.Core.ValueObjects;
 
 namespace Orders.Core.Entities;
 
-public class Order : AggregateRoot
+public class Order : AggregateRoot<OrderId>
 {
     private readonly List<OrderItem> _orderItems = new();
     public IReadOnlyList<OrderItem> OrderItems => _orderItems.AsReadOnly();
 
-    public Guid CustomerId { get; private set; }
-    public OrderStatus Status { get; private set; }
-    public DateTime? DeliveryDate { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public string OrderName { get; private set; }
-    public string CancellationReason { get; private set; }
-
-    public Order(AggregateId id, Guid customerId, OrderStatus status, DateTime createdAt, string orderName, string cancellationReason = "", DateTime? deliveryDate = null)
+    public CustomerId CustomerId { get; private set; } = default!;
+    public OrderName OrderName { get; private set; } = default!;
+    public Address ShippingAddress { get; private set; } = default!;
+    public Address BillingAddress { get; private set; } = default!;
+    public Payment Payment { get; private set; } = default!;
+    public OrderStatus Status { get; private set; } = OrderStatus.New;
+    public decimal TotalPrice
     {
-        Id = id.Value;
-        CustomerId = customerId;
-        Status = status;
-        DeliveryDate = deliveryDate;
-        CreatedAt = createdAt;
-        OrderName = orderName;
-        CancellationReason = cancellationReason;
+        get => OrderItems.Sum(x => x.Price * x.Quantity);
+        private set { }
     }
 
-    public static Order Create(AggregateId id, Guid customerId, OrderStatus status, string orderName, DateTime createdAt)
+    private  Order()
     {
-        var order = new Order(id, customerId, status, createdAt, orderName);
-        order.AddEvent(new OrderCreatedEvent(order));
+            
+    }
+
+
+    public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
+    {
+        var order = new Order
+        {
+            Id = id,
+            CustomerId = customerId,
+            OrderName = orderName,
+            ShippingAddress = shippingAddress,
+            BillingAddress = billingAddress,
+            Payment = payment,
+            Status = OrderStatus.New
+        };
+
+        order.AddDomainEvent(new OrderCreatedEvent(order));
 
         return order;
     }
+
+    public void Update(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
+    {
+        OrderName = orderName;
+        ShippingAddress = shippingAddress;
+        BillingAddress = billingAddress;
+        Payment = payment;
+        Status = status;
+
+        AddDomainEvent(new OrderUpdatedEvent(this));
+    }
+
+    public void Add(ProductId productId, int quantity, decimal price)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price);
+
+        var orderItem = new OrderItem(Id, productId, quantity, price);
+        _orderItems.Add(orderItem);
+    }
+
+    public void Remove(ProductId productId)
+    {
+        var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
+        if (orderItem is not null)
+        {
+            _orderItems.Remove(orderItem);
+        }
+    }
+
 
 }
 

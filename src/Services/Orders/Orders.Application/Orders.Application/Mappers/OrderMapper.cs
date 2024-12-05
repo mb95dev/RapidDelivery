@@ -16,7 +16,7 @@ namespace Orders.Application.Mappers
             return new OrderDto(
                         Id: order.Id,
                         CustomerId: order.CustomerId,
-                        OrderName: order.OrderName,
+                        OrderName: order.OrderName.Value,
                         ShippingAddress: null,
                         BillingAddress: null,
                         Payment: null,

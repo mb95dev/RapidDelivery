@@ -1,35 +1,32 @@
 ﻿namespace Orders.Core.Entities;
 
-public class AggregateId : IEquatable<AggregateId>
+
+public record AggregateId
 {
     public Guid Value { get; }
 
-    public AggregateId()
+    public AggregateId() : this(Guid.NewGuid())
     {
-
     }
 
     public AggregateId(Guid value)
     {
+        if (value == Guid.Empty)
+        {
+            throw new Exception();
+        }
+
         Value = value;
     }
 
-    public bool Equals(AggregateId? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        return ReferenceEquals(this, other) || Value.Equals(other.Value);
-    }
+    public static AggregateId Create()
+        => new(Guid.NewGuid());
+    
+    public static implicit operator Guid(AggregateId id)
+        => id.Value;
 
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        return obj.GetType() == this.GetType() && Equals((AggregateId)obj);
-    }
+    public static implicit operator AggregateId(Guid id)
+        => new (id);
 
-    public override int GetHashCode()
-    {
-        return Value.GetHashCode();
-    }
+    public override string ToString() => Value.ToString();
 }
-

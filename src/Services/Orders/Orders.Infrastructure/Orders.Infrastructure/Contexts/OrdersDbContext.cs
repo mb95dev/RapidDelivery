@@ -17,6 +17,7 @@ public class OrdersDbContext : DbContext, IApplicationDbContext
     }
 
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+    public DbSet<Product> Products { get; }
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();

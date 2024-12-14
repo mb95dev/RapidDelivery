@@ -1,0 +1,39 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  notifications.api:
+    build:
+      context: "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src"
+      dockerfile: "Services/Notifications/Notifications.API/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Notifications.API.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "notificationsapi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src\\Services\\Notifications\\\
+      Notifications.API:/app:rw"
+    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src:/src:rw"
+    - "C:\\Users\\kosqe\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
+  orders.api:
+    build:
+      context: "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src"
+      dockerfile: "Services/Orders/Orders.API/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Orders.API.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "ordersapi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src\\Services\\Orders\\Orders.API:/app:rw"
+    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src:/src:rw"
+    - "C:\\Users\\kosqe\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"

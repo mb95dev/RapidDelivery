@@ -4,7 +4,6 @@ using MediatR;
 using Orders.Application.Commands;
 using Orders.Application.DTO;
 using Orders.Core.Entities;
-
 namespace Orders.Application.Events.Integration;
 
 public class BasketCheckoutEvenHandler(ISender sender) : IConsumer<BasketCheckoutEvent>

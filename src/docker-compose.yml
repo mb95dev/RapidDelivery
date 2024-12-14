@@ -11,3 +11,5 @@ services:
       dockerfile: Services/Notifications/Notifications.API/Dockerfile
   messagebroker:
      image: rabbitmq:management
+  ordersdb:
+       image: mcr.microsoft.com/mssql/server

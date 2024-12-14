@@ -11,10 +11,12 @@ public static class Extensions
     public static IServiceCollection AddInfrastructureServices
         (this IServiceCollection services, IConfiguration configuration)
     {
-         services
-             .AddDbContext<OrdersDbContext>(options =>
-                 options.UseInMemoryDatabase("OrdersDatabase")) 
-             .BuildServiceProvider();
+        var connectionString = configuration.GetConnectionString("Database");
+        
+        services
+            .AddDbContext<OrdersDbContext>(options =>
+                options.UseSqlServer(connectionString));
+         
 
          services.AddScoped<IApplicationDbContext, OrdersDbContext>();
 

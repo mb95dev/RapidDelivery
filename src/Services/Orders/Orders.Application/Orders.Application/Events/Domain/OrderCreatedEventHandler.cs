@@ -15,7 +15,7 @@ public class OrderCreatedEventHandler
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", domainEvent.GetType().Name);
 
-        if (await featureManager.IsEnabledAsync("OrderFullfilment"))
+        if (await featureManager.IsEnabledAsync("OrderFulfillment"))
         {
             var orderCreatedIntegrationEvent = domainEvent.Order.ToOrderDto();
             await publishEndpoint.Publish(orderCreatedIntegrationEvent, cancellationToken);

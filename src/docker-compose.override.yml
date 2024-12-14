@@ -4,6 +4,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - FeatureManagement__OrderFulfillment=false
       - MessageBroker__Host=amqp://rd-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
@@ -14,6 +15,7 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
+      - ordersdb
       - messagebroker  
   notifications.api:
     environment:
@@ -31,7 +33,15 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
       - messagebroker
-
+  ordersdb:
+    container_name: ordersdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SwN12345678
+    restart: always
+    ports:
+      - "1433:1433"
+      
   messagebroker:
     container_name: messagebroker
     hostname: rd-mq

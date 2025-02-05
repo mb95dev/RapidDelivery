@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Exceptions\**" />
+    <Compile Remove="Queries\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Queries\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Exceptions\**" />
+    <None Remove="Queries\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\..\Common\Messaging\Common.Messaging\Common.Messaging.csproj" />
     <ProjectReference Include="..\..\Orders.Domain\Orders.Domain\Orders.Core.csproj" />
@@ -17,12 +29,6 @@
     <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.FeatureManagement" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="Queries\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,7 @@ using Orders.Infrastructure.Contexts;
 
 namespace Orders.Infrastructure.Migrations
 {
-    [DbContext(typeof(OrdersDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class OrdersDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

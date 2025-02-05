@@ -4,9 +4,11 @@ using MediatR;
 using Orders.Application.Commands;
 using Orders.Application.DTO;
 using Orders.Core.Entities;
+using Orders.Core.Events;
+
 namespace Orders.Application.Events.Integration;
 
-public class BasketCheckoutEvenHandler(ISender sender) : IConsumer<BasketCheckoutEvent>
+public class BasketCheckoutEvenHandler(ISender sender) : IConsumer<BasketCheckoutEvent>, IEvent
 {
     public async Task Consume(ConsumeContext<BasketCheckoutEvent> context)
     {

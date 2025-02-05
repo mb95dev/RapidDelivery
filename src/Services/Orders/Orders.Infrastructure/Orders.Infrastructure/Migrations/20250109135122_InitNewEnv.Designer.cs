@@ -12,9 +12,9 @@ using Orders.Infrastructure.Contexts;
 
 namespace Orders.Infrastructure.Migrations
 {
-    [DbContext(typeof(OrdersDbContext))]
-    [Migration("20241203150320_Init")]
-    partial class Init
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20250109135122_InitNewEnv")]
+    partial class InitNewEnv
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -278,7 +278,7 @@ namespace Orders.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Orders.Infrastructure.Contexts.OutboxMessage", b =>

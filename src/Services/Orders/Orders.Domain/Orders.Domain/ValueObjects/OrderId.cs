@@ -2,14 +2,10 @@
 
 namespace Orders.Core.ValueObjects;
 
-public record OrderId(Guid Value)
+public record OrderId
 {
-    public static OrderId Create() => new(Guid.NewGuid());
-    public static implicit operator Guid(OrderId date)
-        => date.Value;
-    
-    public static implicit operator OrderId(Guid value)
-        => new(value);
+    public Guid Value { get; }
+    private OrderId(Guid value) => Value = value;
 
     public static OrderId Of(Guid value)
     {

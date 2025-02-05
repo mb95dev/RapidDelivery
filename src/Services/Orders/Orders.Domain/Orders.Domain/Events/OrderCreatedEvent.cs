@@ -1,5 +1,6 @@
-﻿using Orders.Core.Entities;
+﻿using MediatR;
+using Orders.Core.Entities;
 
 namespace Orders.Core.Events;
 
-public record OrderCreatedEvent(Order Order) : IDomainEvent;
+public record OrderCreatedEvent(Order Order) : IDomainEvent, IEvent<Unit>;

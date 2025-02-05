@@ -1,43 +1,50 @@
-﻿using MediatR;
+﻿using Common.CQRS;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Orders.Infrastructure.Contexts;
 
-public class OutboxDecorator<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
-{
-    private readonly IRequestHandler<TRequest, TResponse> _innerHandler;
-    private readonly OrdersDbContext _dbContext;
+namespace Orders.Infrastructure.Decorators;
 
-    public OutboxDecorator(IRequestHandler<TRequest, TResponse> innerHandler, OrdersDbContext dbContext)
+public class OutboxCommandHandlerDecorator<TCommand, TResponse> : ICommandHandler<TCommand, TResponse>
+    where TCommand : ICommand<TResponse>
+{
+    private readonly ICommandHandler<TCommand, TResponse> _innerHandler;
+    private readonly ApplicationDbContext _dbContext;
+    private readonly ILogger<OutboxCommandHandlerDecorator<TCommand, TResponse>> _logger;
+
+    public OutboxCommandHandlerDecorator(
+        ICommandHandler<TCommand, TResponse> innerHandler,
+        ApplicationDbContext dbContext,
+        ILogger<OutboxCommandHandlerDecorator<TCommand, TResponse>> logger)
     {
-        _innerHandler = innerHandler;
-        _dbContext = dbContext;
+        _innerHandler = innerHandler ?? throw new ArgumentNullException(nameof(innerHandler));
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TCommand command, CancellationToken cancellationToken)
     {
-        // Start a transaction
+        _logger.LogInformation("OutboxCommandHandlerDecorator invoked for {CommandType}", command.GetType().Name);
+
         using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-        // Execute the original handler logic
-        var response = await _innerHandler.Handle(request, cancellationToken);
+        var response = await _innerHandler.Handle(command, cancellationToken);
 
-        // Save the outbox message
         var outboxMessage = new OutboxMessage
         {
             Id = Guid.NewGuid(),
-            EventType = request.GetType().Name, // Use the request type as the event type
-            Payload = JsonConvert.SerializeObject(request), // Serialize the request data
+            EventType = command.GetType().Name,
+            Payload = JsonConvert.SerializeObject(command),
             OccurredOn = DateTime.UtcNow,
             Processed = false
         };
+
         _dbContext.OutboxMessages.Add(outboxMessage);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        // Commit the transaction
         await transaction.CommitAsync(cancellationToken);
 
         return response;
     }
 }
+

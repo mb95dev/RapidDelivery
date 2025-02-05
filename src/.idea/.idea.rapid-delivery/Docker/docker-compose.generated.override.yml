@@ -2,38 +2,74 @@
 services:
   notifications.api:
     build:
-      context: "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src"
+      context: "C:\\Users\\kosqe\\Desktop\\RD\\RapidDelivery\\src"
       dockerfile: "Services/Notifications/Notifications.API/Dockerfile"
       target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "dotnet"
-    - "/app/bin/Debug/net8.0/Notifications.API.dll"
+    - "/opt/JetBrains/RiderDebuggerTools/linux-x64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57000"
+    - "--backend-port=57200"
+    - "--roslyn-worker-port=57400"
+    - "--timeout=60"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
+      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "notificationsapi:dev"
-    ports: []
+    ports:
+    - "127.0.0.1:57004:57000"
+    - "127.0.0.1:57204:57200"
+    - "127.0.0.1:57404:57400"
     volumes:
-    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src\\Services\\Notifications\\\
+    - "C:\\Users\\kosqe\\Desktop\\RD\\RapidDelivery\\src\\Services\\Notifications\\\
       Notifications.API:/app:rw"
-    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src:/src:rw"
+    - "C:\\Users\\kosqe\\Desktop\\RD\\RapidDelivery\\src:/src:rw"
     - "C:\\Users\\kosqe\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\kosqe\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2024.3.3\\\
+      Linux64:/opt/JetBrains/RiderDebuggerTools"
+    - "C:\\Program Files\\JetBrains\\JetBrains Rider 2024.3.2\\bin\\backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    - "C:\\Users\\kosqe\\AppData\\Local\\JetBrains\\Rider2024.3\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2025_1_09_13_13_02:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"
   orders.api:
     build:
-      context: "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src"
+      context: "C:\\Users\\kosqe\\Desktop\\RD\\RapidDelivery\\src"
       dockerfile: "Services/Orders/Orders.API/Dockerfile"
       target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "dotnet"
-    - "/app/bin/Debug/net8.0/Orders.API.dll"
+    - "/opt/JetBrains/RiderDebuggerTools/linux-x64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57000"
+    - "--backend-port=57200"
+    - "--roslyn-worker-port=57400"
+    - "--timeout=60"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
+      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "ordersapi:dev"
-    ports: []
+    ports:
+    - "127.0.0.1:57005:57000"
+    - "127.0.0.1:57205:57200"
+    - "127.0.0.1:57405:57400"
     volumes:
-    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src\\Services\\Orders\\Orders.API:/app:rw"
-    - "C:\\Users\\kosqe\\source\\repos\\RapidDelivery\\src:/src:rw"
+    - "C:\\Users\\kosqe\\Desktop\\RD\\RapidDelivery\\src\\Services\\Orders\\Orders.API:/app:rw"
+    - "C:\\Users\\kosqe\\Desktop\\RD\\RapidDelivery\\src:/src:rw"
     - "C:\\Users\\kosqe\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\kosqe\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2024.3.3\\\
+      Linux64:/opt/JetBrains/RiderDebuggerTools"
+    - "C:\\Program Files\\JetBrains\\JetBrains Rider 2024.3.2\\bin\\backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    - "C:\\Users\\kosqe\\AppData\\Local\\JetBrains\\Rider2024.3\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2025_1_09_13_13_02:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"

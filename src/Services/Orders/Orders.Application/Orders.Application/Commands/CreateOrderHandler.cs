@@ -6,17 +6,17 @@ using Orders.Core.ValueObjects;
 
 namespace Orders.Application.Commands
 {
-    public class CreateOrderHandler(IApplicationDbContext context)
-        : ICommandHandler<CreateOrderCommand, CreateOrderResult>
+    public class CreateOrderHandler(IApplicationDbContext dbContext)
+      : ICommandHandler<CreateOrderCommand, CreateOrderResult>
     {
         public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
         {
             var order = CreateNewOrder(command.Order);
-            
-            context.Orders.Add(order);
-            await context.SaveChangesAsync(cancellationToken);
 
-            return new CreateOrderResult(order.Id);
+            dbContext.Orders.Add(order);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return new CreateOrderResult(order.Id.Value);
         }
 
         private Order CreateNewOrder(OrderDto orderDto)
@@ -25,13 +25,13 @@ namespace Orders.Application.Commands
             var billingAddress = Address.Of(orderDto.BillingAddress.FirstName, orderDto.BillingAddress.LastName, orderDto.BillingAddress.EmailAddress, orderDto.BillingAddress.AddressLine, orderDto.BillingAddress.Country, orderDto.BillingAddress.State, orderDto.BillingAddress.ZipCode);
 
             var newOrder = Order.Create(
-                id: OrderId.Of(Guid.NewGuid()),
-                customerId: CustomerId.Of(orderDto.CustomerId),
-                orderName: OrderName.Of(orderDto.OrderName),
-                shippingAddress: shippingAddress,
-                billingAddress: billingAddress,
-                payment: Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod)
-            );
+                    id: OrderId.Of(Guid.NewGuid()),
+                    customerId: CustomerId.Of(orderDto.CustomerId),
+                    orderName: OrderName.Of(orderDto.OrderName),
+                    shippingAddress: shippingAddress,
+                    billingAddress: billingAddress,
+                    payment: Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod)
+                    );
 
             foreach (var orderItemDto in orderDto.OrderItems)
             {

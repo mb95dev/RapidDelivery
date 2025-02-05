@@ -1,35 +1,42 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using MediatR;
+using Newtonsoft.Json;
+using Orders.Application.Events;
+using Orders.Core.Events;
+using Orders.Infrastructure.Contexts;
 
-//namespace Orders.Infrastructure.Decorators
-//{
-//    internal sealed class OutboxEventHandlerDecorator<TEvent> : IEventHandler<TEvent>
-//        where TEvent : class, IEvent
-//    {
-//        private readonly IEventHandler<TEvent> _handler;
-//        private readonly IMessageOutbox _outbox;
-//        private readonly string _messageId;
-//        private readonly bool _enabled;
+public class OutboxEventHandlerDecorator<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
+    where TRequest : IEvent<TResponse>
+{
+    private readonly IRequestHandler<TRequest, TResponse> _innerHandler;
+    private readonly ApplicationDbContext _dbContext;
 
-//        public OutboxEventHandlerDecorator(IEventHandler<TEvent> handler, IMessageOutbox outbox,
-//            OutboxOptions outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
-//        {
-//            _handler = handler;
-//            _outbox = outbox;
-//            _enabled = outboxOptions.Enabled;
+    public OutboxEventHandlerDecorator(IRequestHandler<TRequest, TResponse> innerHandler, ApplicationDbContext dbContext)
+    {
+        _innerHandler = innerHandler;
+        _dbContext = dbContext;
+    }
 
-//            var messageProperties = messagePropertiesAccessor.MessageProperties;
-//            _messageId = string.IsNullOrWhiteSpace(messageProperties?.MessageId)
-//                ? Guid.NewGuid().ToString("N")
-//                : messageProperties.MessageId;
-//        }
+    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-//        public Task HandleAsync(TEvent @event)
-//            => _enabled
-//                ? _outbox.HandleAsync(_messageId, () => _handler.HandleAsync(@event))
-//                : _handler.HandleAsync(@event);
-//    }
-//}
+        var response = await _innerHandler.Handle(request, cancellationToken);
+
+
+        var outboxMessage = new OutboxMessage
+        {
+            Id = Guid.NewGuid(),
+            EventType = request.GetType().Name,
+            Payload = JsonConvert.SerializeObject(request),
+            OccurredOn = DateTime.UtcNow,
+            Processed = false
+        };
+        _dbContext.OutboxMessages.Add(outboxMessage);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
+
+        return response;
+    }
+}

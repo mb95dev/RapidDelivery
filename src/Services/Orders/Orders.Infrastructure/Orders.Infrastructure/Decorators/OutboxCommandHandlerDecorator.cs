@@ -7,6 +7,7 @@ namespace Orders.Infrastructure.Decorators;
 
 public class OutboxCommandHandlerDecorator<TCommand, TResponse> : ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>
+    where TResponse : notnull
 {
     private readonly ICommandHandler<TCommand, TResponse> _innerHandler;
     private readonly ApplicationDbContext _dbContext;

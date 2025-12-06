@@ -25,7 +25,7 @@ public static class Extensions
 
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(OutboxCommandHandlerDecorator<,>));
 
-        services.TryDecorate(typeof(IRequestHandler<,>), typeof(OutboxEventHandlerDecorator<,>));
+        services.TryDecorate(typeof(INotificationHandler<>), typeof(OutboxEventHandlerDecorator<>));
 
         return services;
     }

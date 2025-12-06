@@ -1,4 +1,6 @@
 ﻿using Common.CQRS;
+using MassTransit;
+using MassTransit.Transports;
 using Orders.Application.Abstractions;
 using Orders.Application.DTO;
 using Orders.Core.Entities;
@@ -6,13 +8,14 @@ using Orders.Core.ValueObjects;
 
 namespace Orders.Application.Commands
 {
-    public class CreateOrderHandler(IApplicationDbContext dbContext)
+    public class CreateOrderHandler(IApplicationDbContext dbContext, IPublishEndpoint publishEndpoint)
       : ICommandHandler<CreateOrderCommand, CreateOrderResult>
     {
         public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
         {
             var order = CreateNewOrder(command.Order);
 
+         //   publishEndpoint.Publish(command.)
             dbContext.Orders.Add(order);
             await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -37,6 +40,7 @@ namespace Orders.Application.Commands
             {
                 newOrder.Add(ProductId.Of(orderItemDto.ProductId), orderItemDto.Quantity, orderItemDto.Price);
             }
+
             return newOrder;
         }
     }

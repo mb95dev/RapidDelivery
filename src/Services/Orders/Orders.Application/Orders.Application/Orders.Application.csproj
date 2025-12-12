@@ -8,13 +8,10 @@
 
   <ItemGroup>
     <Compile Remove="Exceptions\**" />
-    <Compile Remove="Queries\**" />
     <Compile Remove="Services\**" />
     <EmbeddedResource Remove="Exceptions\**" />
-    <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Services\**" />
     <None Remove="Exceptions\**" />
-    <None Remove="Queries\**" />
     <None Remove="Services\**" />
   </ItemGroup>
 

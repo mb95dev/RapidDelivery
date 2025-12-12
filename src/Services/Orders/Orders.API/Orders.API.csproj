@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Carter" Version="8.2.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
@@ -20,6 +21,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\orders.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

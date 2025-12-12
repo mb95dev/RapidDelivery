@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+option csharp_namespace = "Orders.API.Protos";
+
+package orders;
+
+// Order service definition for gRPC communication
+// Demonstrates both unary and streaming patterns
+service OrderService {
+  // Unary RPC: Get a single order by ID
+  rpc GetOrder (GetOrderRequest) returns (OrderResponse);
+  
+  // Unary RPC: Create a new order
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+  
+  // Server streaming: Stream orders as they are created/updated
+  rpc StreamOrders (StreamOrdersRequest) returns (stream OrderResponse);
+  
+  // Unary RPC: Get orders summary for reporting
+  rpc GetOrdersSummary (GetOrdersSummaryRequest) returns (OrdersSummaryResponse);
+}
+
+// Request messages
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message CreateOrderRequest {
+  OrderMessage order = 1;
+}
+
+message StreamOrdersRequest {
+  int32 page_size = 1;
+}
+
+message GetOrdersSummaryRequest {
+  // Empty - no parameters needed
+}
+
+// Response messages
+message OrderResponse {
+  string id = 1;
+  string customer_id = 2;
+  string order_name = 3;
+  OrderStatus status = 4;
+  repeated OrderItemMessage order_items = 5;
+  AddressMessage shipping_address = 6;
+  AddressMessage billing_address = 7;
+  PaymentMessage payment = 8;
+  double total_price = 9;
+  string created_at = 10;
+}
+
+message CreateOrderResponse {
+  string id = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message OrdersSummaryResponse {
+  int32 total_orders = 1;
+  double total_revenue = 2;
+  map<int32, int32> orders_by_status = 3;
+}
+
+// Nested messages
+message OrderItemMessage {
+  string product_id = 1;
+  int32 quantity = 2;
+  double price = 3;
+}
+
+message AddressMessage {
+  string first_name = 1;
+  string last_name = 2;
+  string email_address = 3;
+  string address_line = 4;
+  string country = 5;
+  string state = 6;
+  string zip_code = 7;
+}
+
+message PaymentMessage {
+  string card_name = 1;
+  string card_number = 2;
+  string expiration = 3;
+  string cvv = 4;
+  int32 payment_method = 5;
+}
+
+message OrderMessage {
+  string customer_id = 1;
+  string order_name = 2;
+  repeated OrderItemMessage order_items = 3;
+  AddressMessage shipping_address = 4;
+  AddressMessage billing_address = 5;
+  PaymentMessage payment = 6;
+}
+
+// Enums
+enum OrderStatus {
+  NEW = 0;
+  PENDING = 1;
+  PROCESSING = 2;
+  SHIPPED = 3;
+  DELIVERED = 4;
+  CANCELLED = 5;
+}
+

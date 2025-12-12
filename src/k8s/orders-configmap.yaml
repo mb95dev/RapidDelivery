@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orders-config
+  labels:
+    app: orders-api
+data:
+  rabbitmq-host: "amqp://rabbitmq-service:5672"
+  rabbitmq-username: "guest"
+  feature-management__order-fulfillment: "true"
+
